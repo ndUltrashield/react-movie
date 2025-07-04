@@ -70,7 +70,7 @@ const App = () => {
 
       <div className="wrapper">
         <header>
-          <img src="./logo.svg" alt="" className="w-14 h-14 sm:w-20 sm:h-20 " />
+          <img src="./logo.svg" alt="" className="w-20 h-20 sm:w-28 sm:h-28 " />
 
           <div className="flex gap-0 justify-center items-end pb-8 md:pb-16 mt-8 sm:mt-16">
             {movieList.slice(0, 3).map((movie, index) => (
@@ -123,7 +123,7 @@ const App = () => {
           )}
         </section>
       </div>
-      <div className="flex items-center justify-center gap-4">
+      <div className="flex items-center justify-center gap-4 pb-8 sm:pb-16">
         {pageNumber === 1 ? (
           <button
             type="button"
