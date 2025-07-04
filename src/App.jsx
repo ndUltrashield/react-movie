@@ -23,10 +23,11 @@ const App = () => {
   const [movieList, setmovieList] = useState([]);
   const [isLoading, setisLoading] = useState(false);
   const [debouncedSearchTerm, setdebouncedSearchTerm] = useState("");
+  const [pageNumber, setpageNumber] = useState(1);
 
   useDebounce(() => setdebouncedSearchTerm(searchTerm), 500, [searchTerm]);
 
-  const fetchMovies = async (query = "") => {
+  const fetchMovies = async (query = "", pageNumber) => {
     setisLoading("True");
     seterrorMsg("");
 
@@ -35,7 +36,7 @@ const App = () => {
         ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(
             query
           )}&include_adult=false`
-        : `${API_BASE_URL}/discover/movie?include_adult=false&include_video=false&sort_by=popularity.desc`;
+        : `${API_BASE_URL}/discover/movie?include_adult=false&include_video=false&sort_by=popularity.desc&page=${pageNumber}`; //sort_by=primary_release_date.desc &page=10
       const response = await fetch(endpoint, API_OPTIONS);
 
       if (!response.ok) {
@@ -60,8 +61,8 @@ const App = () => {
   };
 
   useEffect(() => {
-    fetchMovies(debouncedSearchTerm);
-  }, [debouncedSearchTerm]);
+    fetchMovies(debouncedSearchTerm, pageNumber);
+  }, [debouncedSearchTerm, pageNumber]);
 
   return (
     <main>
@@ -69,7 +70,9 @@ const App = () => {
 
       <div className="wrapper">
         <header>
-          <div className="flex gap-0 justify-center items-end pb-8 md:pb-16 ">
+          <img src="./logo.svg" alt="" className="w-14 h-14 sm:w-20 sm:h-20 " />
+
+          <div className="flex gap-0 justify-center items-end pb-8 md:pb-16 mt-8 sm:mt-16">
             {movieList.slice(0, 3).map((movie, index) => (
               <div
                 key={movie.id}
@@ -119,6 +122,41 @@ const App = () => {
             </ul>
           )}
         </section>
+      </div>
+      <div className="flex items-center justify-center gap-4">
+        {pageNumber === 1 ? (
+          <button
+            type="button"
+            className="text-white opacity-20 cursor-not-allowed bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+          >
+            Previous
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={() =>
+              setpageNumber((prevpageNumber) => prevpageNumber - 1)
+            }
+            className="text-white cursor-pointer bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+          >
+            Previous
+          </button>
+        )}
+
+        <button
+          type="button"
+          className="text-white cursor-pointer bg-gray-800 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:focus:ring-gray-700 dark:border-gray-700"
+        >
+          {pageNumber}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setpageNumber((prevpageNumber) => prevpageNumber + 1)}
+          className="text-white cursor-pointer bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700"
+        >
+          Next
+        </button>
       </div>
     </main>
   );
