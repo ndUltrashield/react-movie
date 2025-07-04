@@ -14,7 +14,7 @@ const MovieCard = ({
         alt=""
       />
 
-      <div>
+      <div className="mt-4">
         <h3 className="text-white">{title}</h3>
 
         <div className="content">
